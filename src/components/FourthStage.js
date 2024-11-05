@@ -7,6 +7,10 @@ position: relative;
   display: flex;
   width: 100%;
   justify-content: space-between;
+  @media screen and (max-width: 800px){
+    flex-wrap: wrap;
+    justify-content: center;
+}
 `;
 
 const FourthStage = ({ onNext, onPrev }) => {

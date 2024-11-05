@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { z } from 'zod';
 
 const InputWrapper = styled.div`
 margin: 15px 0;
@@ -58,17 +57,6 @@ white-space: nowrap;
   content: ${props => props.error ? `"${props.error}"` : '""'};
 }
 `;
-
-// Создаем схему валидации для УНФ
-const unfSchema = z.string().refine(
-    (value) => {
-      if (value === '') return true; // Разрешаем пустое значение
-      return /^890-\d{3}-\d{3}-\d{2}-\d{3}$/.test(value);
-    },
-    {
-      message: 'Формат: 890-XXX-XXX-XX-XXX'
-    }
-  );
   
   // Компонент для textarea
   const StyledTextArea = styled(StyledInput).attrs({ as: 'textarea' })`
@@ -140,69 +128,64 @@ const unfSchema = z.string().refine(
     value = '',
     onChange,
     required = false,
-    type = 'text',
     name,
     width = '100%',
-    isUNF = false, // новый проп для определения поля УНФ
+    isUNF = false,
   }) => {
-    const [error, setError] = React.useState('');
-    const [touched, setTouched] = React.useState(false);
+    const [error, setError] = useState('');
+    const [touched, setTouched] = useState(false);
   
-    const validateField = (value) => {
-      if (isUNF) {
-        try {
-          unfSchema.parse(value);
-          setError('');
-          return true;
-        } catch (err) {
-          setError(err.errors[0].message);
-          return false;
-        }
-      } else if (required && !value.trim()) {
-        setError('Заполните поле');
-        return false;
+    const handleBlur = (e) => {
+      setTouched(true);
+      const formattedValue = formatUNF(e.target.value);
+      console.log(formattedValue);
+      if (formattedValue !== e.target.value) {
+        setError('Формат: 890-XXX-XXX-XX-XXX');
+        e.target.value = formattedValue
+        onChange(e, formattedValue);
+      } else {
+        setError('');
       }
-      setError('');
-      return true;
     };
   
     const handleChange = (e) => {
-      // Если это поле УНФ, форматируем ввод
-      if (isUNF) {
-        const value = e.target.value.replace(/[^\d-]/g, '');
-        const parts = value.split('-');
-        let formattedValue = '';
-  
-        if (parts[0]?.length > 0) {
-          formattedValue = '890-';
-          if (parts[1]?.length > 0) formattedValue += parts[1].slice(0, 3);
-          if (parts[1]?.length >= 3) formattedValue += '-';
-          if (parts[2]?.length > 0) formattedValue += parts[2].slice(0, 3);
-          if (parts[2]?.length >= 3) formattedValue += '-';
-          if (parts[3]?.length > 0) formattedValue += parts[3].slice(0, 2);
-          if (parts[3]?.length >= 2) formattedValue += '-';
-          if (parts[4]?.length > 0) formattedValue += parts[4].slice(0, 3);
-        }
-  
-        onChange({
-          ...e,
-          target: {
-            ...e.target,
-            value: formattedValue
-          }
-        });
-      } else {
-        onChange(e);
-      }
-  
+      const formattedValue = formatUNF(e.target.value);
+      onChange(e, formattedValue);
+    
       if (touched) {
-        validateField(e.target.value);
+        if (formattedValue !== e.target.value) {
+          setError('Формат: 890-XXX-XXX-XX-XXX');
+        } else {
+          setError('');
+        }
       }
     };
   
-    const handleBlur = () => {
-      setTouched(true);
-      validateField(value);
+    const formatUNF = (value) => {
+      const sanitizedValue = value.replace(/[^0-9-]/g, '');
+      const parts = sanitizedValue.split('-');
+      console.log(parts[0]?.length < 5);
+      let formattedValue = '';
+
+      if (parts.length < 5) {
+        formattedValue = ''
+      }
+      else if (parts[0]?.length > 0) {
+        formattedValue = '890-';
+        if (parts[1]?.length > 0) formattedValue += parts[1].slice(0, 3);
+        if (parts[1]?.length >= 3) formattedValue += '-';
+        if (parts[2]?.length > 0) formattedValue += parts[2].slice(0, 3);
+        if (parts[2]?.length >= 3) formattedValue += '-';
+        if (parts[3]?.length > 0) formattedValue += parts[3].slice(0, 2);
+        if (parts[3]?.length >= 2) formattedValue += '-';
+        if (parts[4]?.length > 0) formattedValue += parts[4].slice(0, 3);
+        if (parts[4]?.length < 3) formattedValue = '';
+      }
+      else{
+        formattedValue = ''
+      }
+  
+      return formattedValue;
     };
   
     return (
@@ -210,7 +193,7 @@ const unfSchema = z.string().refine(
         {label && <Label>{label}</Label>}
         <InputContainer>
           <StyledInput
-            type={type}
+            type="text"
             value={value}
             onChange={handleChange}
             onBlur={handleBlur}
