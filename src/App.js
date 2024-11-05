@@ -10,6 +10,7 @@ import FourthStage from './components/FourthStage';
 const Container = styled.div`
   width: 100%;
   max-width: 1125px;
+  height: 100%;
   margin: 0 auto;
   padding: 20px;
   overflow: hidden;
