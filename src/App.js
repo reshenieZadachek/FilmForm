@@ -6,6 +6,7 @@ import FirstStage from './components/FirstStage';
 import SecondStage from './components/SecondStage';
 import ThirdStage from './components/ThirdStage';
 import FourthStage from './components/FourthStage';
+import ResetButton from './components/ResetButton';
 
 const Container = styled.div`
   width: 100%;
@@ -18,6 +19,11 @@ const Container = styled.div`
 const StageWrapper = styled(motion.div)`
   width: 100%;
 `;
+const Finally = styled.div`
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+`
 
 const pageVariants = {
   initial: (direction) => ({
@@ -84,7 +90,19 @@ function App() {
     setCurrentStep(prevStep);
     localStorage.setItem('currentStep', prevStep);
   };
-
+  const handleReset = () => {
+    setFormData({
+      projectName: '',
+      genre: '',
+      format: '',
+      number: '',
+      country: '',
+      cost: '',
+      sinopsis: ''
+    });
+    localStorage.removeItem('formData');
+    setCurrentStep(1)
+  };
   return (
     <Container>
       <AnimatePresence mode="wait" initial={false} custom={direction}>
@@ -121,6 +139,24 @@ function App() {
               onNext={handleNext}
               onPrev={handlePrev}
             />
+          )}
+          {currentStep === 5 && (
+            <Finally>
+              <h1>
+                Вы отправили форму.
+              </h1>
+              <div>
+                Даные вашего фильма:
+              </div>
+              <div>
+              {Object.entries(formData).map(([key, value]) => (
+                <div key={key}>
+                  {key}: {value}
+                </div>
+              ))}
+              </div>
+              <ResetButton onReset={handleReset} />
+            </Finally>
           )}
         </StageWrapper>
       </AnimatePresence>

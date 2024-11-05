@@ -3,6 +3,7 @@ import { FormStepper, NavigationControls } from './FormStepper';
 import { InputField, TextAreaField } from './Input';
 import styled from 'styled-components'
 import SelectField from './SelectField';
+import ResetButton from './ResetButton';
 
 const Cont = styled.div`
 position: relative;
@@ -26,16 +27,7 @@ h1{
 }
 `
 
-const ResetButton = styled.button`
-margin-top: 20px;
-width: 225px;
-height: 50px;
-border: 1px solid grey;
-border-radius: 25px;
-background-color: white;
-font-size: 12pt;
-font-family: "Inter Tight", sans-serif;
-`
+
 
 const SecondContColumn = styled.div`
 width: 100%;
@@ -124,9 +116,7 @@ const FirstStage = ({ formData, onUpdateFormData, onNext, onPrev }) => {
       <>
         <Cont style={{ marginBottom: '90px' }}>
           <h1>Производственные параметры фильма</h1>
-          <ResetButton onClick={handleReset}>
-            Отменить заполнение
-          </ResetButton>
+          <ResetButton onReset={handleReset} />
         </Cont>
   
         <Cont>

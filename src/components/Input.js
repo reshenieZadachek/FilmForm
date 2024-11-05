@@ -134,17 +134,29 @@ white-space: nowrap;
   }) => {
     const [error, setError] = useState('');
     const [touched, setTouched] = useState(false);
-  
+    const validateField = (value) => {
+      if (required && !value.trim()) {
+        setError('Заполните поле');
+        return false;
+      }
+      setError('');
+      return true;
+    };
     const handleBlur = (e) => {
       setTouched(true);
-      const formattedValue = formatUNF(e.target.value);
-      console.log(formattedValue);
-      if (formattedValue !== e.target.value) {
-        setError('Формат: 890-XXX-XXX-XX-XXX');
-        e.target.value = formattedValue
-        onChange(e, formattedValue);
-      } else {
-        setError('');
+      if(isUNF){
+        const formattedValue = formatUNF(e.target.value);
+        console.log(formattedValue);
+        if (formattedValue !== e.target.value) {
+          setError('Формат: 890-XXX-XXX-XX-XXX');
+          e.target.value = formattedValue
+          onChange(e, formattedValue);
+        } else {
+          setError('');
+        }
+      }
+      else {
+        validateField(e.target.value);
       }
     };
   
@@ -153,7 +165,7 @@ white-space: nowrap;
       onChange(e, formattedValue);
     
       if (touched) {
-        if (formattedValue !== e.target.value) {
+        if (formattedValue !== e.target.value && isUNF) {
           setError('Формат: 890-XXX-XXX-XX-XXX');
         } else {
           setError('');
