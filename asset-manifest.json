@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/FilmForm/static/css/main.95ed97b0.css",
-    "main.js": "/FilmForm/static/js/main.8890f818.js",
+    "main.js": "/FilmForm/static/js/main.e207cbe4.js",
     "static/js/453.24aaaf9f.chunk.js": "/FilmForm/static/js/453.24aaaf9f.chunk.js",
     "index.html": "/FilmForm/index.html",
     "main.95ed97b0.css.map": "/FilmForm/static/css/main.95ed97b0.css.map",
-    "main.8890f818.js.map": "/FilmForm/static/js/main.8890f818.js.map",
+    "main.e207cbe4.js.map": "/FilmForm/static/js/main.e207cbe4.js.map",
     "453.24aaaf9f.chunk.js.map": "/FilmForm/static/js/453.24aaaf9f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.95ed97b0.css",
-    "static/js/main.8890f818.js"
+    "static/js/main.e207cbe4.js"
   ]
 }
